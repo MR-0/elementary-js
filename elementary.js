@@ -2,13 +2,22 @@
 ---------------------------
 Elementary JS
 ---------------------------
-Version: 1.1.0
+Version: 1.1.1
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
 MR0 © 2019 | MIT license
 ---------------------------
 */
+
+/**************************
+---------------------------
+LOG
+---------------------------
+1.1.1 - 2019.04.04
+- Add alt atribute to to-svg
+---------------------------
+**************************/
 
 (function(){
 	
@@ -166,7 +175,7 @@ MR0 © 2019 | MIT license
 				scripts.push(script);
 				window.__temp_inrequire_data = data;
 				document.body.appendChild(script);
-				callback.call(this, window.__temp_inrequire_return);
+				callback && callback.call(this, window.__temp_inrequire_return);
 				window.__temp_inrequire_data = null;
 				window.__temp_inrequire_return = null;
 			});
@@ -822,6 +831,7 @@ el.component('img.to-svg', function(elements){
 			div.innerHTML = d;
 			var svg = div.getElementsByTagName('svg')[0];
 			svg.setAttributeNS(null, 'class', classes);
+			svg.setAttributeNS(null, 'alt', that.alt);
 			that.outerHTML = svg.outerHTML;
 		});
 	}
