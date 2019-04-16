@@ -2,7 +2,7 @@
 ---------------------------
 Elementary JS
 ---------------------------
-Version: 1.1.1
+Version: 1.2.0
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
@@ -313,6 +313,55 @@ LOG
 		}
 		return null;
 	};
+
+	// TRANSFORM METHOD: PUBLIC
+
+	var transform = (function(){
+		var tr = {
+			x: 'translateX',
+			y: 'translateY',
+			z: 'translateZ',
+			r: 'rotate',
+			s: 'scale'
+		};
+		function eval (str, current, prox) {
+			var is = false;
+				
+			for (var k in prox) {
+				if (tr[k]) {
+					current[k] += (prox[k] - current[k]) * acc;
+					current[k] = current[k].toFixed(3) * 1;
+					if (k === 'x' || k === 'y' || k === 'z') {
+						str += ' '+ tr[k] +'('+ current[k] +'px)';
+					}
+					else if (k === 's') {
+						str += ' '+ tr[k] +'('+ current[k] +')';
+					}
+					else {
+						str += ' '+ tr[k] +'('+ current[k] +'deg)';
+					}
+					is = is || current[k] !== prox[k];
+				}
+			}
+			
+			return is ? str : null
+		}
+		return function (that, acc) {
+			var old = window.getComputedStyle(that).transform;
+			var vl = {x: 0, y: 0, z: 0, r: 0, s: 0};
+
+			acc = acc || 1;
+			old = old !== 'none' ? old : '';
+			
+			return function(d) {
+				var str = eval(old, vl, d);
+				
+				if (str) that.style.transform = str;
+
+				return str;
+			};
+		}
+	})();
 	
 	// WAIT FOR | PSUDO LISTENER MEHTOD: PUBLIC
 
@@ -324,7 +373,7 @@ LOG
 
 	// ABOUT
 
-	El.prototype.version      = '1.0.0';
+	El.prototype.version      = '1.2.0';
 
 	// REGISTER METHODS
 
@@ -344,6 +393,7 @@ LOG
 	El.prototype.scroll       = scroll;
 	El.prototype.select       = select;
 	El.prototype.style        = style;
+	El.prototype.transform    = transform;
 	El.prototype.waitfor      = waitfor;
 
 	return null;
@@ -705,56 +755,13 @@ el.component('.scroll-transform', function(elements){
 		ww = window.innerWidth;
 	});
 
-	function translate(that) {
-		var a = 0.5;
-		var old = window.getComputedStyle(that).transform;
-		var vl = {};
-		var tr = {
-			x: 'translateX',
-			y: 'translateY',
-			z: 'translateZ',
-			r: 'rotate',
-			s: 'scale'
-		};
-
-		old = old !== 'none' ? old : '';
-		
-		return function(d) {
-			var str = old;
-			var is = false;
-			
-			for (var k in tr) {
-				d[k] = d[k] || 0;
-				vl[k] = vl[k] || 0;
-				vl[k] += (d[k] - vl[k]) * a;
-				vl[k] = vl[k].toFixed(3) * 1;
-				if (k === 'x' || k === 'y' || k === 'z') {
-					str += ' '+ tr[k] +'('+ vl[k] +'px)';
-				}
-				else if (k === 's') {
-					str += ' '+ tr[k] +'('+ vl[k] +')';
-				}
-				else {
-					str += ' '+ tr[k] +'('+ vl[k] +'deg)';
-				}
-				is = is || vl[k] !== d[k];
-			}
-
-			console.log(str);
-
-			if (is) that.style.transform = str;
-
-			return is;
-		};
-	}
-
 	return function(behavior, events) {
 		var data = this.dataset.scrollTransform;
 		
 		all.push({
 			node: this,
 			data: el.parse(data),
-			trans: translate(this)
+			trans: el.transform(this)
 		});
 	};
 });
