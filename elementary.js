@@ -2,7 +2,7 @@
 ---------------------------
 Elementary JS
 ---------------------------
-Version: 1.2.0
+Version: 1.2.1
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
@@ -10,14 +10,20 @@ MR0 © 2019 | MIT license
 ---------------------------
 */
 
-/**************************
----------------------------
+/*****************************************************
+------------------------------------------------------
 LOG
----------------------------
+------------------------------------------------------
 1.1.1 - 2019.04.04
 - Add alt atribute to to-svg
----------------------------
-**************************/
+------------------------------------------------------
+1.2.0 - 2019.04.15
+- Transform method
+------------------------------------------------------
+1.2.1 - 2019.04.15
+- Fix transform method acc bug
+------------------------------------------------------
+*****************************************************/
 
 (function(){
 	
@@ -324,7 +330,7 @@ LOG
 			r: 'rotate',
 			s: 'scale'
 		};
-		function eval (str, current, prox) {
+		function eval (str, current, prox, acc) {
 			var is = false;
 				
 			for (var k in prox) {
@@ -354,7 +360,7 @@ LOG
 			old = old !== 'none' ? old : '';
 			
 			return function(d) {
-				var str = eval(old, vl, d);
+				var str = eval(old, vl, d, acc);
 				
 				if (str) that.style.transform = str;
 
@@ -594,7 +600,6 @@ el.component('.scroll-slides', function(elements){
 					if (dh / hh < 0.5 && dh / hh > -0.5) fit = height + of - wh - hp * i;
 				}
 
-
 				if (dh < hh * 0.5 && dh + hh * 0.5 > 0) {
 					if (!is_current) {
 						element.node.classList.add('current');
@@ -643,37 +648,6 @@ el.component('.scroll-slides', function(elements){
 		ww = window.innerWidth;
 	});
 
-	function translate(that) {
-		var x = 0;
-		var y = 0;
-		var z = 0;
-		var a = 0.25;
-		var old = window.getComputedStyle(that).transform;
-
-		old = old !== 'none' ? old : '';
-		
-		return function(d) {
-
-			d.x = d.x || 0;
-			d.y = d.y || 0;
-			d.z = d.z || 0;
-			x += (d.x - x) * a;
-			y += (d.y - y) * a;
-			z += (d.z - z) * a;
-			x = x.toFixed(0) * 1;
-			y = y.toFixed(0) * 1;
-			z = z.toFixed(0) * 1;
-
-			if (d.x !== x || d.y !== y || d.z !== z) {
-				that.style.transform = old + ' \
-					translateX('+ x +'px) \
-					translateY('+ y +'px) \
-					translateZ('+ z +'px)';
-				return true;
-			}
-		};
-	}
-
 	return function(behavior, events) {
 
 		var elements = el
@@ -692,7 +666,7 @@ el.component('.scroll-slides', function(elements){
 						return {
 							node: e,
 							data: el.parse(data), 
-							trans: translate(e)
+							trans: el.transform(e, 0.25)
 						};
 					});
 				
@@ -761,7 +735,7 @@ el.component('.scroll-transform', function(elements){
 		all.push({
 			node: this,
 			data: el.parse(data),
-			trans: el.transform(this)
+			trans: el.transform(this, 0.5)
 		});
 	};
 });
