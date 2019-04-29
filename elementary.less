@@ -2,7 +2,7 @@
 ---------------------------------
 Elementary CSS.
 ---------------------------------
-Version: 1.1.0
+Version: 1.1.1
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------------
@@ -19,6 +19,9 @@ LOG
 ------------------------------------------------------
 1.1.0 - 2019.04.29
 - Texts sizes
+------------------------------------------------------
+1.1.1 - 2019.04.29
+- Texts sizes bug fixed
 ------------------------------------------------------
 *****************************************************/
 
@@ -224,6 +227,10 @@ button {
 	color: #FFF;
 	background: #2AD;
 }
+input[type="button"],
+button {
+	font-size: 1.6rem;
+}
 
 /* PRESETS: CODE */
 
@@ -392,35 +399,45 @@ h6.text-xl, .h6.text-xl {
 .text-xs legend, legend.text-xs,
 .text-xs input, input.text-xs,
 .text-xs textarea, textarea.text-xs,
-.text-xs select,  select.text-xs {
+.text-xs select,  select.text-xs,
+.text-xs input[type="button"], input[type="button"].text-xs,
+.text-xs button, button.text-xs {
 	font-size: 0.64rem;
 }
 .text-sm label, label.text-sm,
 .text-sm legend, legend.text-sm,
 .text-sm input, input.text-sm,
 .text-sm textarea, textarea.text-sm,
-.text-sm select,  select.text-sm {
+.text-sm select,  select.text-sm,
+.text-sm input[type="button"], input[type="button"].text-sm,
+.text-sm button, button.text-sm {
 	font-size: 1.28rem;
 }
 .text-md label, label.text-md,
 .text-md legend, legend.text-md,
 .text-md input, input.text-md,
 .text-md textarea, textarea.text-md,
-.text-md select,  select.text-md {
+.text-md select,  select.text-md,
+.text-md input[type="button"], input[type="button"].text-md,
+.text-md button, button.text-md {
 	font-size: 1.92rem;
 }
 .text-lg label, label.text-lg,
 .text-lg legend, legend.text-lg,
 .text-lg input, input.text-lg,
 .text-lg textarea, textarea.text-lg,
-.text-lg select,  select.text-lg {
+.text-lg select,  select.text-lg,
+.text-lg input[type="button"], input[type="button"].text-lg,
+.text-lg button, button.text-lg {
 	font-size: 2.56rem;
 }
-.text-lg label, label.text-lg,
-.text-lg legend, legend.text-lg,
-.text-lg input, input.text-lg,
-.text-lg textarea, textarea.text-lg,
-.text-lg select,  select.text-lg {
+.text-xl label, label.text-xl,
+.text-xl legend, legend.text-xl,
+.text-xl input, input.text-xl,
+.text-xl textarea, textarea.text-xl,
+.text-xl select,  select.text-xl,
+.text-xl input[type="button"], input[type="button"].text-xl,
+.text-xl button, button.text-xl {
 	font-size: 3.52rem;
 }
 
