@@ -2,13 +2,25 @@
 ---------------------------------
 Elementary CSS.
 ---------------------------------
-Version: 1.0.0
+Version: 1.1.0
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------------
 MR0 © 2018 | MIT license
 ---------------------------------
 */
+
+/*****************************************************
+------------------------------------------------------
+LOG
+------------------------------------------------------
+1.0.0 - --
+- Git
+------------------------------------------------------
+1.1.0 - 2019.04.29
+- Texts sizes
+------------------------------------------------------
+*****************************************************/
 
 /* COLOR LIST */
 /*
@@ -70,7 +82,8 @@ html {
 }
 
 body {
-	font: 400 1.6rem/1.66em Helvetica, Arial, sans-serif;
+	font: 400 1.6rem/1.566em Helvetica, Arial, sans-serif;
+	letter-spacing: ~"calc( 0.1rem - 0.025em )";
 	background: #FFF;
 	color: #222;
 	-webkit-font-smoothing: antialiased;
@@ -79,21 +92,14 @@ body {
 	padding: 0;
 }
 
-/* PRESETS: FONT */
-@import (inline) url('https://fonts.googleapis.com/css?family=Fira+Sans:300,400,600,800');
-body {
-	font-family: 'Fira Sans', Helvetica, Arial, sans-serif;
-}
-
 /* PRESETS: GENERAL */
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-weight: 400;
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
 	margin: 0.9rem 0 0;
 }
 h1,
@@ -104,7 +110,6 @@ h5,
 h6,
 p {
 	line-height: 1.566em;
-	letter-spacing: ~"calc( 0.1rem - 0.025em )";
 }
 p,
 blockquote,
@@ -118,22 +123,22 @@ fieldset,
 pre{
 	margin: 0 0 1rem;
 }
-h1 {
+h1, .h1 {
 	font-size: 3.7rem;
 }
-h2 {
+h2, .h2 {
 	font-size: 3.28rem;
 }
-h3 {
+h3, .h3 {
 	font-size: 2.86rem;
 }
-h4 {
+h4, .h4 {
 	font-size: 2.44rem;
 }
-h5 {
+h5, .h5 {
 	font-size: 2.02rem;
 }
-h6 {
+h6, .h6 {
 	font-size: 1.6rem;
 }
 a {
@@ -167,7 +172,7 @@ select {
 	box-shadow: none;
 	width: 100%;
 	margin-bottom: 2rem;
-	font-size: 1.4rem;
+	font-size: 1.6rem;
 	appearance: none;
 }
 select {
@@ -180,7 +185,7 @@ select:focus {
 }
 input[type="checkbox"],
 input[type="radio"] {
-	height: 14px;
+	height: 1.6rem;
 	width: 20px;
 	vertical-align: middle;
 }
@@ -189,7 +194,7 @@ legend {
 	display: block;
 	margin-bottom: 1rem;
 	font-weight: 600;
-	font-size: 14px;
+	font-size: 1.6rem;
 	user-select: none;
 }
 fieldset {
@@ -277,6 +282,146 @@ th {
 }
 .text-uppercase {
 	text-transform: uppercase;
+}
+.text-xs {
+	font-size: 40%;
+}
+.text-sm {
+	font-size: 80%;
+}
+.text-md {
+	font-size: 120%;
+}
+.text-lg {
+	font-size: 160%;
+}
+.text-xl {
+	font-size: 220%;
+}
+h1.text-xs, .h1.text-xs {
+	font-size: 1.48rem;
+}
+h2.text-xs, .h2.text-xs {
+	font-size: 1.312rem;
+}
+h3.text-xs, .h3.text-xs {
+	font-size: 1.144rem;
+}
+h4.text-xs, .h4.text-xs {
+	font-size: 0.976rem;
+}
+h5.text-xs, .h5.text-xs {
+	font-size: 0.808rem;
+}
+h6.text-xs, .h6.text-xs {
+	font-size: 0.64rem;
+}
+h1.text-sm, .h1.text-sm {
+	font-size: 2.96rem;
+}
+h2.text-sm, .h2.text-sm {
+	font-size: 2.624rem;
+}
+h3.text-sm, .h3.text-sm {
+	font-size: 2.288rem;
+}
+h4.text-sm, .h4.text-sm {
+	font-size: 1.952rem;
+}
+h5.text-sm, .h5.text-sm {
+	font-size: 1.616rem;
+}
+h6.text-sm, .h6.text-sm {
+	font-size: 1.28rem;
+}
+h1.text-md, .h1.text-md {
+	font-size: 4.44rem;
+}
+h2.text-md, .h2.text-md {
+	font-size: 3.936rem;
+}
+h3.text-md, .h3.text-md {
+	font-size: 3.432rem;
+}
+h4.text-md, .h4.text-md {
+	font-size: 2.928rem;
+}
+h5.text-md, .h5.text-md {
+	font-size: 2.424rem;
+}
+h6.text-md, .h6.text-md {
+	font-size: 1.92rem;
+}
+h1.text-lg, .h1.text-lg {
+	font-size: 5.92rem;
+}
+h2.text-lg, .h2.text-lg {
+	font-size: 5.248rem;
+}
+h3.text-lg, .h3.text-lg {
+	font-size: 4.576rem;
+}
+h4.text-lg, .h4.text-lg {
+	font-size: 3.904rem;
+}
+h5.text-lg, .h5.text-lg {
+	font-size: 3.232rem;
+}
+h6.text-lg, .h6.text-lg {
+	font-size: 2.56rem;
+}
+h1.text-xl, .h1.text-xl {
+	font-size: 8.14rem;
+}
+h2.text-xl, .h2.text-xl {
+	font-size: 7.216rem;
+}
+h3.text-xl, .h3.text-xl {
+	font-size: 6.292rem;
+}
+h4.text-xl, .h4.text-xl {
+	font-size: 5.368rem;
+}
+h5.text-xl, .h5.text-xl {
+	font-size: 4.444rem;
+}
+h6.text-xl, .h6.text-xl {
+	font-size: 3.52rem;
+}
+.text-xs label, label.text-xs,
+.text-xs legend, legend.text-xs,
+.text-xs input, input.text-xs,
+.text-xs textarea, textarea.text-xs,
+.text-xs select,  select.text-xs {
+	font-size: 0.64rem;
+}
+.text-sm label, label.text-sm,
+.text-sm legend, legend.text-sm,
+.text-sm input, input.text-sm,
+.text-sm textarea, textarea.text-sm,
+.text-sm select,  select.text-sm {
+	font-size: 1.28rem;
+}
+.text-md label, label.text-md,
+.text-md legend, legend.text-md,
+.text-md input, input.text-md,
+.text-md textarea, textarea.text-md,
+.text-md select,  select.text-md {
+	font-size: 1.92rem;
+}
+.text-lg label, label.text-lg,
+.text-lg legend, legend.text-lg,
+.text-lg input, input.text-lg,
+.text-lg textarea, textarea.text-lg,
+.text-lg select,  select.text-lg {
+	font-size: 2.56rem;
+}
+.text-lg label, label.text-lg,
+.text-lg legend, legend.text-lg,
+.text-lg input, input.text-lg,
+.text-lg textarea, textarea.text-lg,
+.text-lg select,  select.text-lg {
+	font-size: 3.52rem;
 }
 
 /* UTILS: DESK TEXT */

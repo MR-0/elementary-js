@@ -2,7 +2,7 @@
 ---------------------------
 Elementary JS
 ---------------------------
-Version: 1.2.1
+Version: 1.3.0
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
@@ -22,6 +22,10 @@ LOG
 ------------------------------------------------------
 1.2.1 - 2019.04.15
 - Fix transform method acc bug
+------------------------------------------------------
+1.3.0 - 2019.04.16
+- Modal component
+- HTML Element support to select method
 ------------------------------------------------------
 *****************************************************/
 
@@ -293,7 +297,7 @@ LOG
 
 	// SELECT: PUBLIC
 
-	function select(selector){
+	function select (selector) {
 		if (typeof selector === 'string') {
 			if (this.length && this.length > 1) {
 				selector = this.reduce(function(o, e){
@@ -302,8 +306,15 @@ LOG
 			}
 			else selector = (this[0] || document).querySelectorAll(selector);
 		}
-		selector = selector.length ? selector : [selector];
-		return this.slice.call(selector, 0);
+		else if (selector.nodeType) {
+			selector = selector.querySelectorAll(selector);
+		}
+		
+		if (selector.length || selector.nodeType) {
+			selector = selector.length ? selector : [selector];
+			return this.slice.call(selector, 0);
+		}
+		return null;
 	}
 
 	// STYLE METHOD: PUBLIC
@@ -379,7 +390,7 @@ LOG
 
 	// ABOUT
 
-	El.prototype.version      = '1.2.0';
+	El.prototype.version      = '1.3.0';
 
 	// REGISTER METHODS
 
@@ -792,6 +803,148 @@ el.component('.snap', function(elements){
 			top : this.offsetTop,
 			y : null
 		});
+	}
+});
+
+// —————————————————————————————————————————
+// TO MODAL | 1.3.0
+// —————————————————————————————————————————
+
+el.component('a.open-modal', function(elements){
+	var all = [];
+
+	el.style("\
+		.modal {\
+			display: none;\
+			position: fixed;\
+			top: 50%;\
+			left: 100%;\
+			margin: 0 -50%;\
+			transform: translate(-50%, -50%) translateY(12px);\
+			opacity: 0;\
+			z-index: 1000;\
+			transition: opacity linear 0.3s, transform ease 0.3s;\
+		}\
+		.modal .container,\
+		.modal .container-xs,\
+		.modal .container-sm,\
+		.modal .container-md,\
+		.modal .container-lg,\
+		.modal .container-xl {\
+			background: #FFF;\
+			width: auto;\
+			margin: 0 2rem;\
+			box-shadow: 0 6px 24px -6px rgba(0,0,0,0);\
+			transition: box-shadow ease 0.3s;\
+		}\
+		.modal.modal-show {\
+			display: block;\
+		}\
+		.modal.modal-on {\
+			transition-delay: 0.3s, 0.3s;\
+			transform: translate(-50%, -50%) translateY(0);\
+			opacity: 1;\
+		}\
+		.modal.modal-on .container,\
+		.modal.modal-on .container-xs,\
+		.modal.modal-on .container-sm,\
+		.modal.modal-on .container-md,\
+		.modal.modal-on .container-lg,\
+		.modal.modal-on .container-xl {\
+			transition-delay: 0.3s;\
+			box-shadow: 0 12px 36px -12px rgba(0,0,0,0.5);\
+		}\
+		.modal a.modal-close {\
+			display: block;\
+			position: absolute;\
+			top: 0;\
+			right: 0;\
+			padding: 1rem;\
+			width: 5rem;\
+			color: #222;\
+			opacity: 0.6;\
+			text-align: center;\
+			text-decoration: none;\
+			line-height: 2.6rem;\
+			font-size: 4rem;\
+			font-weight: 300;\
+			cursor: pointer;\
+			transition: opacity linear 0.3s;\
+			z-index: 30;\
+		}\
+		.modal a.modal-close:hover {\
+			opacity: 1;\
+		}\
+		#modal-bgd {\
+			display: none;\
+			position: fixed;\
+			background-color: #000;\
+			top: 0;\
+			left: 0;\
+			bottom: 0;\
+			right: 0;\
+			opacity: 0;\
+			z-index: 990;\
+			transition: opacity linear 0.6s;\
+		}\
+		#modal-bgd.modal-show {\
+			display: block;\
+		}\
+		#modal-bgd.modal-on {\
+			opacity: 0.5;\
+		}\
+	");
+
+	var show = false;
+	var current = null;
+	var bgd = el.create('div', { id: 'modal-bgd' });
+
+	document.body.appendChild(bgd);
+
+	function open (modal) {
+		current = modal;
+		show = true;
+		current.classList.add('modal-show');
+		current.getClientRects(); // <- reflow
+		current.classList.add('modal-on');
+		bgd.classList.add('modal-show');
+		bgd.getClientRects(); // <- reflow
+		bgd.classList.add('modal-on');
+	}
+
+	function close () {
+		show = false;
+		current.classList.remove('modal-on');
+		bgd.classList.remove('modal-on');
+	}
+
+	bgd.addEventListener('click', close);
+	bgd.addEventListener('transitionend', function (e) {
+		if (!show) bgd.classList.remove('modal-show');	
+	}, false);
+
+	return function (behavior) {
+		var hash = this.hash;
+		var modal = el.select(hash);
+		
+		if (modal) {
+			var a_close = modal.select('a.modal-close')[0];
+
+			modal = modal[0];
+
+			modal.addEventListener('transitionend', function (e) {
+				if (!show) {
+					modal.classList.remove('modal-show');
+					current = null;
+				}
+			}, false);
+			
+			this.addEventListener('click', function(){
+				open(modal);
+			});
+			
+			a_close.addEventListener('click', close);
+		}
 	}
 });
 
