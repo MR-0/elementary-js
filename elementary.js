@@ -27,12 +27,19 @@ LOG
 - Modal component
 - HTML Element support to select method
 ------------------------------------------------------
+1.3.2 - 2019.05.16
+- Add list of components
+- Recall component if no has constructor
+- Exclude elements with 'el' property
+- Add camel_case utility
+------------------------------------------------------
 *****************************************************/
 
 (function(){
 	
 	var El = Array;
 	var el = window.el = new El();
+	var components = {};
 
 	// REQUEST ANIMATION FRAME METHOD: PUBLIC
 
@@ -74,6 +81,14 @@ LOG
 		}
 	})();
 
+	// CAMEL CASE | UTILITY : PRIVATE
+
+	function camel_case(str){
+		return str.split('-').map(function(d,i){
+			if(!i) return d.toLowerCase();
+			else return d.charAt(0).toUpperCase() + d.slice(1).toLowerCase();
+		}).join('');
+	}
 	
 	// REGISTER COMPONENT METHOD: PUBLIC
 	
@@ -81,11 +96,17 @@ LOG
 		selector = selector.split('.');
 		var tag = selector[1] ? selector[0] : null;
 		var name = selector[1] ? selector[1] : selector[0];
+		var camel_name = camel_case(name);
+
+		if (fun) components[camel_name] = fun;
+		else fun = components[camel_name];
+		
 		var elements = document.getElementsByClassName(name);
 			elements = Array.prototype.slice.call(elements, 0);
-			elements = tag ? elements.filter(function(d){
-				return d.tagName === tag.toUpperCase();
-			}) : elements;
+			elements = elements.filter(function(d){
+				has_tag = tag ? d.tagName === tag.toUpperCase() : true;
+				return has_tag && !that.el;
+			});
 		var listener = fun(elements);
 		elements.map(function(that){
 			var events = {};
