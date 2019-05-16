@@ -105,7 +105,7 @@ LOG
 			elements = Array.prototype.slice.call(elements, 0);
 			elements = elements.filter(function(d){
 				has_tag = tag ? d.tagName === tag.toUpperCase() : true;
-				return has_tag && !that.el;
+				return has_tag && !d.el;
 			});
 		var listener = fun(elements);
 		elements.map(function(that){
