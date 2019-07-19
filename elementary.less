@@ -2,7 +2,7 @@
 ---------------------------------
 Elementary CSS.
 ---------------------------------
-Version: 1.1.1
+Version: 1.3.2
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------------
@@ -22,6 +22,33 @@ LOG
 ------------------------------------------------------
 1.1.1 - 2019.04.29
 - Texts sizes bug fixed
+------------------------------------------------------
+1.1.2 - 2019.06.05
+- Button class display and padding fix
+------------------------------------------------------
+1.1.3 - 2019.06.07
+- Add gutter control to single col
+------------------------------------------------------
+1.2.0 - 2019.06.07
+- Add flex-fixed class: fixed the col width, no gorw
+- Remove flex-fit class: beacuse was redundant
+------------------------------------------------------
+1.2.1 - 2019.06.08
+- Fix button padding parse calc
+- Fix line height and margin for headings
+------------------------------------------------------
+1.3.0 - 2019.06.10
+- Add flex-fit as col adjust to his content,
+no shrink, no grow
+- Add flex-fit and flex-fixed single col support and
+desk prefix
+------------------------------------------------------
+1.3.1 - 2019.06.12
+- Ajust body letter spacing
+------------------------------------------------------
+1.3.2 - 2019.06.14
+- Fix margin left and right gut-lg and gut-xl
+- Add margin bottom and top to flex-row childs
 ------------------------------------------------------
 *****************************************************/
 
@@ -86,7 +113,7 @@ html {
 
 body {
 	font: 400 1.6rem/1.566em Helvetica, Arial, sans-serif;
-	letter-spacing: ~"calc( 0.1rem - 0.025em )";
+	letter-spacing: ~"calc( 0.05rem - 0.05em )";
 	background: #FFF;
 	color: #222;
 	-webkit-font-smoothing: antialiased;
@@ -103,14 +130,9 @@ h3, .h3,
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-	margin: 0.9rem 0 0;
+	margin: ~"calc(4.33rem - 1em)" 0 0.3rem;
+	line-height: 1.23em;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
 p {
 	line-height: 1.566em;
 }
@@ -137,12 +159,15 @@ h3, .h3 {
 }
 h4, .h4 {
 	font-size: 2.44rem;
+	line-height: 1.26em;
 }
 h5, .h5 {
 	font-size: 2.02rem;
+	line-height: 1.32em;
 }
 h6, .h6 {
 	font-size: 1.6rem;
+	line-height: 1.35em;
 }
 a {
 	color: #2AD;
@@ -470,8 +495,9 @@ h6.text-xl, .h6.text-xl {
 /* UTILS: IMAGES & MISC */
 
 .button {
+	display: inline-block;
 	min-height: 4rem;
-	padding: 1rem 2rem;
+	padding: ~"calc(1rem + 0.1em)" 2rem 1rem;
 	cursor: pointer;
 	color: #FFF;
 	background: #2AD;
@@ -828,8 +854,13 @@ h6.text-xl, .h6.text-xl {
 .flex-row.flex-nowrap {
 	flex-wrap: nowrap;
 }
-.flex-row.flex-fit > * {
-	flex: 1 1 0;
+.flex-row.flex-fixed > *,
+.flex-row > .flex-fixed {
+	flex: 0 1 0;
+}
+.flex-row.flex-fit > *,
+.flex-row > .flex-fit {
+	flex: 0 0 auto;
 }
 
 /* UTILS: DESK FLEX ROW -> ALING */
@@ -854,6 +885,14 @@ h6.text-xl, .h6.text-xl {
 	.flex-row.desk-flex-nowrap {
 		flex-wrap: nowrap;
 	}
+	.flex-row.desk-flex-fixed > *,
+	.flex-row > .desk-flex-fixed {
+		flex: 0 1 0;
+	}
+	.flex-row.desk-flex-fit > *,
+	.flex-row > .desk-flex-fit {
+		flex: 0 0 auto;
+	}
 }
 
 /* UTILS: FLEX ROW -> BREAK LINE */
@@ -868,6 +907,8 @@ h6.text-xl, .h6.text-xl {
 .flex-row > * {
 	padding-left: 2rem;
 	padding-right: 2rem;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
 	flex: 1 1 0;
 }
 .flex-row > .col {
@@ -973,34 +1014,40 @@ h6.text-xl, .h6.text-xl {
 /* UTILS: FLEX COLUMNS -> GUTTER */
 
 .flex-row.gut-no > *,
-.gut-no .flex-row > * {
+.gut-no .flex-row > *,
+.flex-row > .gut-no {
 	padding-left: 0;
 	padding-right: 0;
 }
 .flex-row.gut-xs > *,
-.gut-xs .flex-row > * {
+.gut-xs .flex-row > *,
+.flex-row > .gut-xs {
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 }
 .flex-row.gut-sm > *,
-.gut-sm .flex-row > * {
+.gut-sm .flex-row > *,
+.flex-row > .gut-sm {
 	padding-left: 1rem;
 	padding-right: 1rem;
 }
 .flex-row.gut-md > *,
-.gut-md .flex-row > * {
+.gut-md .flex-row > *,
+.flex-row > .gut-md {
 	padding-left: 3rem;
 	padding-right: 3rem;
 }
 .flex-row.gut-lg > *,
-.gut-lg .flex-row > * {
-	padding-left: 4rem;
-	padding-right: 4rem;
+.gut-lg .flex-row > *,
+.flex-row > .gut-lg {
+	padding-left: 5rem;
+	padding-right: 5rem;
 }
 .flex-row.gut-xl > *,
-.gut-xl .flex-row > * {
-	padding-left: 6rem;
-	padding-right: 6rem
+.gut-xl .flex-row > *,
+.flex-row > .gut-xl {
+	padding-left: 8rem;
+	padding-right: 8rem
 }
 
 /* UTILS: FLEX DESK COLUMNS */
@@ -1129,13 +1176,13 @@ h6.text-xl, .h6.text-xl {
 	}
 	.flex-row.desk-gut-lg > *,
 	.desk-gut-lg .flex-row > * {
-		padding-left: 4rem;
-		padding-right: 4rem;
+		padding-left: 5rem;
+		padding-right: 5rem;
 	}
 	.flex-row.desk-gut-xl > *,
 	.desk-gut-xl .flex-row > * {
-		padding-left: 6rem;
-		padding-right: 6rem
+		padding-left: 8rem;
+		padding-right: 8rem
 	}
 }
 
