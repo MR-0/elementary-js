@@ -2,7 +2,7 @@
 ---------------------------
 Elementary JS
 ---------------------------
-Version: 1.9.3
+Version: 1.10.1
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
@@ -128,6 +128,23 @@ values - breakpoint 600
 - Improve transform: add translate3d to performance
 - Fix parse function try catch error
 ------------------------------------------------------
+1.10.0 - 2019.07.22
+- Improve parse: add support to literal string via ''
+- Change in parse maybe incompatible with previous
+implementations
+- Improve and mayor changes in custom select
+component
+- Add once method for components: set a function only
+once, no matter many times init the component
+------------------------------------------------------
+1.10.1 - 2019.07.23
+- Remove elements in component inicialization
+- Remove once: now the listener creation is unique
+- Remove setListenerComponent: now the definition is
+explicit
+- The component inicialization is restricted to
+instaces of it (auto init)
+------------------------------------------------------
 *****************************************************/
 
 (function(){
@@ -235,7 +252,6 @@ values - breakpoint 600
 				elements: [],
 				listener: null,
 				getElements: getElements,
-				setListener: setListenerComponent,
 				makeParticulars: makeParticularsComponents,
 				fun: fun
 			});
@@ -337,12 +353,12 @@ values - breakpoint 600
 	// INIT METHOD: PRIVATE
 
 	function init () {
-		components_list.map(function(comp){
-			var elements = comp.getElements();
-			var listener = comp.fun(elements);
-			
-			comp.setListener(listener);
-			comp.makeParticulars();
+		components_list.map(function(comp){			
+			comp.getElements();
+			if ( comp.elements.length ) {
+				comp.listener = comp.listener || comp.fun();
+				comp.makeParticulars();
+			}
 		});
 
 		return null;
@@ -521,8 +537,8 @@ values - breakpoint 600
 	function parse (str) {
 		var out = null;
 		
-		var json = str.replace(/([^,\s\{\}]+:)/g, function(str){
-			return '"'+str.slice(0,-1)+'":';
+		var json = str.replace(/([^,\s\{\}:]+)/g, function(str){
+			return /'/.test(str) ? str.replace('\'', '"') : '"'+ str +'"';
 		});
 
 		try { out = JSON.parse(json); }
@@ -779,7 +795,7 @@ values - breakpoint 600
 
 	// ABOUT
 
-	El.prototype.version         = '1.9.3';
+	El.prototype.version         = '1.10.1';
 
 	// REGISTER METHODS
 
@@ -983,39 +999,137 @@ el.component('.change-letters', function(elements){
 // —————————————————————————————————————————
 
 el.component('select.custom-select', function(elements){
+
+	this.style(
+		'.custom-select {'+
+			'position: relative;'+
+		'}'+
+		'.custom-select select {'+
+			'display: none;'+
+		'}'+
+		'.custom-select .custom-select-label {'+
+			'margin: 0;'+
+			'padding: 0;'+
+			'cursor: pointer;'+
+		'}'+
+		'.custom-select .custom-select-holder {'+
+			'display: none;'+
+			'position: absolute;'+
+			'top: 100%;'+
+			'left: 0;'+
+			'min-width: 100%;'+
+			'padding: 0;'+
+			'background-color: #FFF;'+
+			'box-shadow: 0 7px 14px -7px rgba(0,0,0,0.3);'+
+			'transform: translateY(-10px);'+
+			'opacity: 0;'+
+			'transition: opacity 0.3s, transform ease 0.3s;'+
+		'}'+
+		'.custom-select .custom-select-holder ul {'+
+			'display: block;'+
+			'margin: 0;'+
+			'padding: 0 0 5px;'+
+		'}'+
+		'.custom-select .custom-select-holder ul li {'+
+			'display: block;'+
+			'margin: 0;'+
+			'padding: 3px 15px;'+
+			'cursor: pointer;'+
+		'}'+
+		'.custom-select .custom-select-holder ul li.current {'+
+			'background-color: #EEE;'+
+		'}'+
+		'.custom-select.custom-select-open .custom-select-holder {'+
+			'display: block;'+
+		'}'+
+		'.custom-select.custom-select-open .custom-select-holder.custom-select-on {'+
+			'opacity: 1;'+
+			'transform: translateY(0);'+
+		'}'
+	);
+
+	var current = null;
+
+	document.body.addEventListener('click', function(){
+		if (current) current.close();
+	});
 	
 	return function(component) {
+		var options = component.options;
 		var select = el.select(this);
+		var change_event = new Event('change');
 		var custom_select = el.create('div', { 'class': 'custom-select' }, (
 			this.outerHTML+
+			'<h4 class="custom-select-label"></h4>'+
 			'<div class="custom-select-holder">'+
 				'<ul></ul>'+
 			'</div>'
 		));
 		var input_select = custom_select.select('select')[0];
-		var holder = custom_select.select('.custom-select-holder ul');
+		var label = custom_select.select('.custom-select-label');
+		var holder = custom_select.select('.custom-select-holder');
+		var ul = holder.select('ul');
+
+		var obj = {
+			timer: null,
+			node: custom_select[0],
+			holder: holder[0],
+			toggle: function () {
+				var is_open = this.node.classList.contains('custom-select-open');
+				if (is_open) this.close();
+				else this.open();
+			},
+			close: function () {
+				var that = this;
+				if (this.timer) clearTimeout(this.timer);
+				this.holder.classList.remove('custom-select-on');
+				this.timer = setTimeout(function(){
+					that.node.classList.remove('custom-select-open');
+				}, 300);
+				current = null;
+			},
+			open: function () {
+				if (this.timer) clearTimeout(this.timer);
+				this.node.classList.add('custom-select-open');
+				this.node.getBoundingClientRect();
+				this.holder.classList.add('custom-select-on');
+				if (current) current.close();
+				current = this;
+			}
+		}
 
 		input_select.classList.remove('custom-select');
-		input_select.addEventListener('click', function(e){
+		input_select.addEventListener('change', function(e){
 			e.preventDefault();
+		});
+		
+		label[0].addEventListener('click', function(e){
+			e.stopPropagation();
+			obj.toggle();
 		});
 
 		el.select(this.children).map(function(d, i){
 			var li = el.create('li', {}, d.innerText)[0];
+			if (!i) {
+				label[0].innerHTML = (options.prefix || '') + d.innerText;
+				li.classList.add('current');
+			}
 			li.addEventListener('click', function(e){
 				input_select.selectedIndex = i;
+				input_select.dispatchEvent(change_event);
+				label[0].innerHTML = (options.prefix || '') + d.innerText;
+				ul.select('li').map(function(l){
+					l.classList.remove('current');
+				});
+				li.classList.add('current');
+				obj.toggle();
 			});
-			holder.append(li);
+			ul.append(li);
 		});
-
-		console.log(custom_select);
 
 		select.replace(custom_select);
 
 		component.refresh();
-		
-		//el.select(this).select('option').map(function(d){});
-		
 	};
 });
 
@@ -1458,8 +1572,6 @@ el.component('.scroll-slides', function(elements){
 							trans: el.transform(e, 0.25)
 						};
 					});
-
-				console.log(childs);
 				
 				return {
 					node: that,
