@@ -145,6 +145,10 @@ explicit
 - The component inicialization is restricted to
 instaces of it (auto init)
 ------------------------------------------------------
+1.11.0 - 2019.07.30
+- Add options to slideshow component
+- Add play and stop events to slideshow component
+------------------------------------------------------
 *****************************************************/
 
 (function(){
@@ -1642,7 +1646,7 @@ el.component('.scroll-transform', function(elements){
 });
 
 // —————————————————————————————————————————
-// SLIDESHOW | 1.0.0
+// SLIDESHOW | 1.1.0
 // —————————————————————————————————————————
 
 el.component('.slideshow', function(){
@@ -1651,7 +1655,6 @@ el.component('.slideshow', function(){
 		'arrows': false,
 		'autoplay': true
 	};
-	var options = {};
 
 	return function (component) {
 
@@ -1664,9 +1667,8 @@ el.component('.slideshow', function(){
 		var timer = null;
 		var slides = el.select(this).select('.slides').childs();
 		var current = null;
-		var delay = component.options ? component.options.delay : null;
-		
-		delay = delay || defaults.delay;
+		var options = component.options || {};
+		var delay = options.delay || defaults.delay;
 
 		if (options.arrows) {
 			var next_arrow = el.create('a', { 'class': 'slideshow-next' }, '&gt;')[0];
@@ -1722,9 +1724,21 @@ el.component('.slideshow', function(){
 			timer = setTimeout(next, delay);
 		};
 
+		function stop () {
+			that.classList.add('slideshow-stoped');
+			timer && clearTimeout(timer);
+		}
+
+		function play () {
+			that.classList.remove('slideshow-stoped');
+			go();
+		}
+
 		el.select(this).on('go', go);
 		el.select(this).on('next', next);
 		el.select(this).on('prev', prev);
+		el.select(this).on('stop', stop);
+		el.select(this).on('play', play);
 
 		if (slides.length > 1) el.select(this).trigger('go');	
 	};
