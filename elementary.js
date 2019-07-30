@@ -1664,6 +1664,9 @@ el.component('.slideshow', function(){
 		var timer = null;
 		var slides = el.select(this).select('.slides').childs();
 		var current = null;
+		var delay = component.options ? component.options.delay : null;
+		
+		delay = delay || defaults.delay;
 
 		if (options.arrows) {
 			var next_arrow = el.create('a', { 'class': 'slideshow-next' }, '&gt;')[0];
@@ -1716,7 +1719,7 @@ el.component('.slideshow', function(){
 
 			el.select(that).trigger('change', {ind: ind});
 			
-			timer = setTimeout(next, defaults.delay);
+			timer = setTimeout(next, delay);
 		};
 
 		el.select(this).on('go', go);
