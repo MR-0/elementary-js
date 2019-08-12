@@ -2,7 +2,7 @@
 ---------------------------
 Elementary JS
 ---------------------------
-Version: 1.10.1
+Version: 1.11.1
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
@@ -148,6 +148,11 @@ instaces of it (auto init)
 1.11.0 - 2019.07.30
 - Add options to slideshow component
 - Add play and stop events to slideshow component
+------------------------------------------------------
+1.11.1 - 2019.08.12
+- Fix isnum method
+- Fix several problems in validate component, and
+extend to any element
 ------------------------------------------------------
 *****************************************************/
 
@@ -450,7 +455,7 @@ instaces of it (auto init)
 	// IS NUMERIC: PUBLIC
 	
 	function isnum (d) {
-		return typeof !isNaN(d);
+		return !Number.isNaN(d * 1);
 	}
 
 	// IS OBJECT: PUBLIC
@@ -1846,7 +1851,6 @@ el.component('input.validate', function(elements){
 
 	this.style(
 		'input.validate.wrong {'+
-			'color: #F00;'+
 			'border-color: #F00;'+
 		'}'
 	);
@@ -1870,16 +1874,18 @@ el.component('input.validate', function(elements){
 		
 		this.addEventListener('blur', function(e) {
 			var valid = true;
+			var is_num = this.value && el.isnum(this.value); 
+			var value = is_num ? this.value * 1 : this.value;
 
-			var value = el.isnum(this.value) ? this.value * 1 : this.value;
+			if (!is_num) valid = !!value;
 
 			if (options.min) {
-				if (el.isnum(value)) valid = valid && this.value > option.min;
+				if (is_num) valid = valid && value > option.min;
 				else valid = valid && value.length > option.min;
 			}
 
 			if (options.max) {
-				if (el.isnum(value)) valid = valid && value < option.max;
+				if (is_num) valid = valid && value < option.max;
 				else valid = valid && value.length < option.max;
 			}
 			
@@ -1897,7 +1903,7 @@ el.component('input.validate', function(elements){
 				valid = valid && digito_verificador(rut_arr[0]) === rut_arr[1];
 			}
 
-			if (valid || !value) this.classList.remove('wrong');
+			if (valid) this.classList.remove('wrong');
 			else this.classList.add('wrong');
 		});
 	};
