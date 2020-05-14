@@ -4,11 +4,11 @@
 ---------------------------------
 Elementary CSS.
 ---------------------------------
-Version: 1.4.6
+Version: 1.4.3
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------------
-MR0 © 2020 | MIT license
+MR0 © 2018 | MIT license
 ---------------------------------
 */
 
@@ -81,13 +81,13 @@ properties
 - Fix: flex-something priority
 ------------------------------------------------------
 1.4.3 - 2019.10.16
-- Add variable @mobi-width
+- Add variable $mobi-width
 - Fix mobi-hidden and other media querys whit fixed
 value
 ------------------------------------------------------
 1.4.4 - 2019.10.27
 - General improves
--- Add variable @font
+-- Add variable $font
 -- Ajust headlines line height
 -- Add general letter spacing
 -- Regularize font metrics
@@ -99,10 +99,6 @@ layout
 ------------------------------------------------------
 1.4.5 - 2020.01.10
 - Fix cover class
-------------------------------------------------------
-1.4.6 - 2020.05.13
-- Add label > input behavior
-- Ajust pad-no container
 ------------------------------------------------------
 *****************************************************/
 
@@ -120,10 +116,10 @@ layout
 #333 : body text color;
 */
 
-@font:        Helvetica, Arial, sans-serif;
-@mobi-width:  900px;
-@tint-0:     #333;
-@tint-1:     #28E;
+$font:        Helvetica, Arial, sans-serif;
+$mobi-width:  900px;
+$tint-0:     #333;
+$tint-1:     #28E;
 
 /* RESET */
 
@@ -171,9 +167,9 @@ html {
 
 body {
 	font: 400 1.6rem/1.566em Helvetica, Arial, sans-serif;
-	font-family: @font;
+	font-family: $font;
 	background: #FFF;
-	color: @tint-0;
+	color: $tint-0;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	min-height: 100vh;
@@ -192,7 +188,7 @@ h6, .h6 {
 	padding: 0.5rem 0;
 	font-weight: 600;
 	line-height: 1.25em;
-	letter-spacing: ~"calc( 0.15rem - 0.0625em )";
+	letter-spacing: calc( 0.15rem - 0.0625em );
 }
 p,
 blockquote,
@@ -234,7 +230,7 @@ h6, .h6 {
 	padding: 0.6rem 0 0.4rem;
 }
 a {
-	color: @tint-1;
+	color: $tint-1;
 }
 img {
 	width: auto;
@@ -268,7 +264,7 @@ textarea {
 input,
 textarea,
 select {
-	font-family: @font;
+	font-family: $font;
 	height: 4rem;
 	padding: .5rem 1rem;
 	background: transparent;
@@ -287,7 +283,7 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-	border-bottom-color: @tint-1;
+	border-bottom-color: $tint-1;
 }
 input[type="checkbox"],
 input[type="radio"] {
@@ -303,9 +299,6 @@ legend {
 	font-size: 1.6rem;
 	user-select: none;
 }
-label > input {
-	margin: 0;
-}
 fieldset {
 	padding: 0;
 	border: none;
@@ -320,14 +313,14 @@ button,
 input[type="submit"],
 input[type="button"],
 input[type="reset"] {
-	font-family: @font;
+	font-family: $font;
 	font-size: 1.6rem;
 	min-height: 4rem;
 	padding: 1rem 2rem;
 	text-decoration: none;
 	cursor: pointer;
 	color: #FFF;
-	background: @tint-1;
+	background: $tint-1;
 	border: none;
 }
 
@@ -407,7 +400,7 @@ th {
 
 /* UTILS: DESK TEXT */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.desk-text-center {
 		text-align: center;
 	}
@@ -473,7 +466,7 @@ th {
 
 /* UTILS: DESK IMAGES & MISC */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.desk-block {
 		display: block;
 	}
@@ -522,7 +515,7 @@ th {
 
 /* UTILS: DESK VISIBILITY */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.desk-hidden {
 		visibility: hidden;
 	}
@@ -542,7 +535,7 @@ th {
 
 /* UTILS: MOBI VISIBILITY */
 
-@media (max-width: @mobi-width - 1px) {
+@media (max-width: $mobi-width - 1px) {
 	.mobi-hidden {
 		visibility: hidden;
 	}
@@ -580,49 +573,27 @@ th {
 		padding-left: 0;
 		padding-right: 0;	
 	}
-	&.pad-no {
-		padding-left: 0;
-		padding-right: 0;
-	}
 }
 .container {
 	max-width: 1200px;
-	&.pad-no {
-		max-width: calc(1200px - 4rem);
-	}
 }
 .container-no {
 	max-width: none;
 }
 .container-xs {
 	max-width: 300px;
-	&.pad-no {
-		max-width: calc(300px - 4rem);
-	}
 }
 .container-sm {
 	max-width: 600px;
-	&.pad-no {
-		max-width: calc(600px - 4rem);
-	}
 }
 .container-md {
 	max-width: 900px;
-	&.pad-no {
-		max-width: calc(900px - 4rem);
-	}
 }
 .container-lg {
 	max-width: 1500px;
-	&.pad-no {
-		max-width: calc(1500px - 4rem);
-	}
 }
 .container-xl {
 	max-width: 1800px;
-	&.pad-no {
-		max-width: calc(1800px - 4rem);
-	}
 }
 
 
@@ -659,7 +630,7 @@ th {
 
 /* UTILS: DESK MARGIN */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.desk-mar {
 		margin-top: 2rem;
 		margin-bottom: 2rem;
@@ -796,7 +767,7 @@ th {
 
 /* LAYOUT: DESK FLEX ROW -> ALING */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.flex-row.desk-flex-center {
 		justify-content: center;
 	}
@@ -957,7 +928,7 @@ th {
 
 /* LAYOUT: FLEX DESK COLUMNS */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.flex-row {
 		& > .desk-col-02 { flex-basis: 3.3333%; width: 3.3333%; }
 		& > .desk-col-05 { flex-basis: 8.3333%; width: 8.3333%; }
@@ -994,7 +965,7 @@ th {
 
 /* LAYOUT: FLEX DESK COLUMNS -> GUTTER */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.flex-row.desk-gut-no > *,
 	.desk-gut-no > .flex-row > * {
 		padding-left: 0;
@@ -1078,7 +1049,7 @@ th {
 
 /* LAYOUT: FLEX DESK COLUMNS MIX */
 
-@media (min-width: @mobi-width) {
+@media (min-width: $mobi-width) {
 	.flex-row > .col-2-1,
 	.flex-row > .col-3-1,
 	.flex-row > .col-4-1,

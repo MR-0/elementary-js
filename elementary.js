@@ -1,8 +1,8 @@
 /*!
 ---------------------------
-Elementary JS
+Elementary JS :)
 ---------------------------
-Version: 1.11.1
+Version: 1.12.4
 Author: MR0
 Author URL: http://mr0.cl
 ---------------------------
@@ -153,6 +153,36 @@ instaces of it (auto init)
 - Fix isnum method
 - Fix several problems in validate component, and
 extend to any element
+- Improve dispatch of events object in components
+------------------------------------------------------
+1.11.2 - 2019.08.13
+- Add title option to custom-select component
+------------------------------------------------------
+1.11.3 - 2019.08.23
+- Validate component now is not restricted to only
+inputs
+- Dropdown component
+------------------------------------------------------
+1.11.4 - 2019.08.24
+- Fix bad positive of isnum method over empty string
+------------------------------------------------------
+1.11.5 - 2019.08.27
+- Add closest method
+------------------------------------------------------
+1.12.0 - 2019.10.02
+- Add load event in 'to-svg' behavior
+- Add netx-slide and prev-slide to slideshow behavior
+------------------------------------------------------
+1.12.1 - 2019.10.03
+- Fix next and prev functions in slideshow behavior
+------------------------------------------------------
+1.12.3 - 2019.12.19
+- Improve post method for send formData object
+- Improve slideshow behavior
+- Fix validate input in rut when only has numbers
+------------------------------------------------------
+1.12.4 - 2019.12.23
+- Add to validate behavior, valid css selector
 ------------------------------------------------------
 *****************************************************/
 
@@ -240,6 +270,28 @@ extend to any element
 		this.map(function(d){
 			out = out.concat(el.select(d.children));
 		});
+		return out;
+	};
+
+	// CLOSEST METHOD: PUBLIC
+	
+	function closest (selector) {;
+		var out = new El;
+		
+		this.map(function(d){
+			var parent = d.parentNode;
+			
+			while (parent) {
+				if (parent.matches(selector)) {
+					out.push(parent);
+					parent = null;
+				}
+				else {
+					parent = parent.parentNode;
+				}
+			}
+		});
+		
 		return out;
 	};
 	
@@ -455,7 +507,8 @@ extend to any element
 	// IS NUMERIC: PUBLIC
 	
 	function isnum (d) {
-		return !Number.isNaN(d * 1);
+		d += '';
+		return d.trim() !== '' && !Number.isNaN(d * 1);
 	}
 
 	// IS OBJECT: PUBLIC
@@ -508,7 +561,7 @@ extend to any element
 			return function (name, data) {
 				name = camel_case(comp.name+'-'+name);
 				var event = this[name] || ( data ? new CustomEvent(name) : new Event(name) );
-				this[name] = event;
+				if (!this[name]) this[name] = event;
 				if (data) event.data = data;
 				that.dispatchEvent(event);
 			};
@@ -547,7 +600,7 @@ extend to any element
 		var out = null;
 		
 		var json = str.replace(/([^,\s\{\}:]+)/g, function(str){
-			return /'/.test(str) ? str.replace('\'', '"') : '"'+ str +'"';
+			return (/'/).test(str) ? str.replace('\'', '"') : '"'+ str +'"';
 		});
 
 		try { out = JSON.parse(json); }
@@ -564,7 +617,7 @@ extend to any element
 			fun = data;
 			data = null;
 		}
-		if (data) {
+		if (data && !data instanceof FormData) {
 			Object.keys(data).map(function(k){
 				data[k] = encodeURIComponent(data[k]+'');
 			});
@@ -574,7 +627,7 @@ extend to any element
 				.replace(/"|{|}/g, '');
 		}
 		xhr.open('post', url);
-		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		//xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		//xhr.setRequestHeader('Origin', window.location.host);
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState == 4 && xhr.status == 200) {
@@ -804,13 +857,14 @@ extend to any element
 
 	// ABOUT
 
-	El.prototype.version         = '1.10.1';
+	El.prototype.version         = '1.12.4';
 
 	// REGISTER METHODS
 
 	El.prototype.animate         = animate;
 	El.prototype.append          = append;
 	El.prototype.childs          = childs;
+	El.prototype.closest         = closest;
 	El.prototype.component       = component;
 	El.prototype.create          = create;
 	El.prototype.extend          = extend;
@@ -1120,13 +1174,13 @@ el.component('select.custom-select', function(elements){
 		el.select(this.children).map(function(d, i){
 			var li = el.create('li', {}, d.innerText)[0];
 			if (!i) {
-				label[0].innerHTML = (options.prefix || '') + d.innerText;
+				setLabel(d.innerText);
 				li.classList.add('current');
 			}
 			li.addEventListener('click', function(e){
 				input_select.selectedIndex = i;
 				input_select.dispatchEvent(change_event);
-				label[0].innerHTML = (options.prefix || '') + d.innerText;
+				setLabel(d.innerText);
 				ul.select('li').map(function(l){
 					l.classList.remove('current');
 				});
@@ -1139,6 +1193,96 @@ el.component('select.custom-select', function(elements){
 		select.replace(custom_select);
 
 		component.refresh();
+
+		function setLabel (str) {
+			if (options.title) {
+				if (label[0].innerHTML !== options.title) label[0].innerHTML = options.title;
+			}
+			else label[0].innerHTML = (options.prefix || '') + str;
+		}
+	};
+});
+
+// —————————————————————————————————————————
+// DROPDOWN | 1.11.3 | 1.0.0
+// —————————————————————————————————————————
+
+el.component('.dropdown', function(elements){
+
+	this.style(
+		'.dropdown {'+
+			'position: relative;'+
+		'}'+
+		'.dropdown .dropdown-label {'+
+			'cursor: pointer;'+
+		'}'+
+		'.dropdown .dropdown-holder {'+
+			'display: none;'+
+			'position: absolute;'+
+			'top: 100%;'+
+			'left: 0;'+
+			'min-width: 100%;'+
+			'padding: 0;'+
+			'background-color: #FFF;'+
+			'box-shadow: 0 7px 14px -7px rgba(0,0,0,0.3);'+
+			'transform: translateY(-10px);'+
+			'opacity: 0;'+
+			'transition: opacity 0.3s, transform ease 0.3s;'+
+		'}'+
+		'.dropdown.dropdown-open .dropdown-holder {'+
+			'display: block;'+
+		'}'+
+		'.dropdown.dropdown-open .dropdown-holder.dropdown-on {'+
+			'opacity: 1;'+
+			'transform: translateY(0);'+
+		'}'
+	);
+
+	var current = null;
+
+	document.body.addEventListener('click', function(){
+		if (current) current.close();
+	});
+	
+	return function(component) {
+		var options = component.options;
+		var dropdown = el.select(this);
+		var label = dropdown.select('.dropdown-label');
+		var holder = dropdown.select('.dropdown-holder');
+		var ul = holder.select('ul');
+
+		var obj = {
+			timer: null,
+			node: dropdown[0],
+			holder: holder[0],
+			toggle: function () {
+				var is_open = this.node.classList.contains('dropdown-open');
+				if (is_open) this.close();
+				else this.open();
+			},
+			close: function () {
+				var that = this;
+				if (this.timer) clearTimeout(this.timer);
+				this.holder.classList.remove('dropdown-on');
+				this.timer = setTimeout(function(){
+					that.node.classList.remove('dropdown-open');
+				}, 300);
+				current = null;
+			},
+			open: function () {
+				if (this.timer) clearTimeout(this.timer);
+				this.node.classList.add('dropdown-open');
+				this.node.getBoundingClientRect();
+				this.holder.classList.add('dropdown-on');
+				if (current) current.close();
+				current = this;
+			}
+		}
+		
+		label[0].addEventListener('click', function(e){
+			e.stopPropagation();
+			obj.toggle();
+		});
 	};
 });
 
@@ -1679,8 +1823,8 @@ el.component('.slideshow', function(){
 			var next_arrow = el.create('a', { 'class': 'slideshow-next' }, '&gt;')[0];
 			var prev_arrow = el.create('a', { 'class': 'slideshow-prev' }, '&lt;')[0];
 
-			next_arrow.on('click', next);
-			prev_arrow.on('click', prev);
+			el.select(next_arrow).on('click', next);
+			el.select(prev_arrow).on('click', prev);
 
 			this.appendChild(next_arrow);
 			this.appendChild(prev_arrow);
@@ -1703,12 +1847,14 @@ el.component('.slideshow', function(){
 		}
 
 		function next () {
-			ind = (ind + 1) % slides.length;
+			++ind;
+			ind = ind < slides.length ? ind : 0;
 			go();
 		}
 
 		function prev () {
-			ind = (ind - 1) % slides.length;
+			--ind;
+			ind = ind < 0 ? slides.length - 1 : ind;
 			go();
 		}
 
@@ -1716,15 +1862,29 @@ el.component('.slideshow', function(){
 			var i = e && e.data && e.data.ind;
 			if ( i || i === 0) ind = e.data.ind;
 			
+			var next_slide = slides[ind + 1];
+			var prev_slide = slides[ind - 1];
+			next_slide = next_slide ? next_slide : slides[0];
+			prev_slide = prev_slide ? prev_slide : slides[slides.length - 1];
+			
 			current = slides[ind];
 
-			slides.map(function(d){ d.classList.remove('current'); });
+			slides.map(function(slide){
+				slide.classList.remove('current');
+				slide.classList.remove('next-slide');
+				slide.classList.remove('prev-slide');
+			});
 
 			current.classList.add('current');
+			next_slide.classList.add('next-slide');
+			prev_slide.classList.add('prev-slide');
 			
 			if (timer) clearTimeout(timer);
 
-			el.select(that).trigger('change', {ind: ind});
+			el.select(that).trigger('change', {
+				ind: ind,
+				slides: slides
+			});
 			
 			timer = setTimeout(next, delay);
 		};
@@ -1834,12 +1994,15 @@ el.component('img.to-svg', function(elements){
 				srcs.push(this.src);
 				cache.push(str);
 				that.outerHTML = str;
+				el.select(that).trigger('load');
 			});
 		}
 		else if (cache[ind]) {
 			that.classList.remove('to-svg');
 			if (that.parentNode) that.outerHTML = cache[ind];
+			el.select(that).trigger('load');
 		}
+
 	};
 });
 
@@ -1847,10 +2010,10 @@ el.component('img.to-svg', function(elements){
 // VALIDATE | 1.7.0 | 1.0.0
 // —————————————————————————————————————————
 
-el.component('input.validate', function(elements){
+el.component('.validate', function(elements){
 
 	this.style(
-		'input.validate.wrong {'+
+		'.validate.wrong {'+
 			'border-color: #F00;'+
 		'}'
 	);
@@ -1865,6 +2028,7 @@ el.component('input.validate', function(elements){
 	
 	return function (component) {
 		var options = component.options;
+		var _is_valid = false
 
 		if (el.isstr(options)) {
 			var k = options;
@@ -1872,21 +2036,21 @@ el.component('input.validate', function(elements){
 			options[k] = true;
 		}
 		
-		this.addEventListener('blur', function(e) {
+		el.select(this).on('check', function(e) {
 			var valid = true;
-			var is_num = this.value && el.isnum(this.value); 
+			var is_num = this.value && el.isnum(this.value);
 			var value = is_num ? this.value * 1 : this.value;
 
 			if (!is_num) valid = !!value;
 
 			if (options.min) {
-				if (is_num) valid = valid && value > option.min;
-				else valid = valid && value.length > option.min;
+				if (is_num) valid = valid && value > options.min;
+				else valid = valid && value.length > options.min;
 			}
 
 			if (options.max) {
-				if (is_num) valid = valid && value < option.max;
-				else valid = valid && value.length < option.max;
+				if (is_num) valid = valid && value < options.max;
+				else valid = valid && value.length < options.max;
 			}
 			
 			if (options.email) {
@@ -1899,12 +2063,24 @@ el.component('input.validate', function(elements){
 			}
 
 			if (options.rut) {
-				var rut_arr = value.replace(/\./g, '').split('-');
-				valid = valid && digito_verificador(rut_arr[0]) === rut_arr[1];
+				var rut_arr = (''+value).replace(/\./g, '').split('-');
+				valid = valid && digito_verificador(rut_arr[0] * 1) === rut_arr[1] * 1;
 			}
 
-			if (valid) this.classList.remove('wrong');
-			else this.classList.add('wrong');
+			_is_valid = valid;
+			
+			if (_is_valid) {
+				this.classList.add('valid');
+				this.classList.remove('wrong');
+			}
+			else {
+				this.classList.add('wrong');
+				this.classList.remove('valid');
+			}
+		});
+		
+		this.addEventListener('blur', function(e){
+			el.select(this).trigger('check');
 		});
 	};
 });
@@ -1939,7 +2115,7 @@ el.component('a.video', function(elements){
 			position: absolute;\
 			top: 50%;\
 			left: 50%;\
-			transform: translate(-45%,-50%) scale(1);\
+			transform: translate(-50%,-50%) scale(1);\
 			transition: transform ease 0.3s;\
 			background: transparent;\
 			z-index: 20;\
@@ -1999,7 +2175,7 @@ el.component('a.video', function(elements){
 			z-index: 13;\
 		}\
 		a.video.loading button.play {\
-			transform: translate(-45%,-50%) scale(0.82);\
+			transform: translate(-50%,-50%) scale(0.82);\
 		}\
 		a.video button.play:before {\
 			content: \"\";\

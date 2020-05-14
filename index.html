@@ -6,34 +6,198 @@
 	<title>E L E M E N T A R Y</title>
 	<meta name="description" content="Minumum CSS / LESS Boilerplate">
 	<meta name="author" content="MR0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link href="elementary.min.css" rel="stylesheet">
 	<style>
 		body {
 			background-color: #FFF;
-			background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 10" height="10" width="1"><rect style="fill:red; fill-opacity:0.12" y="9" width="1" height="1"/></svg>');
+			background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" height="10" width="10"><rect fill="transparent" stroke="%23BEF" stroke-width="1" x="-1" y="-1" width="11" height="11"/></svg>');
 			background-repeat: repeat;
+			background-position: 0 0;
+		}
+
+		#colums-system-section .box {
+			background-color: rgba(0,0,0,0.06);
+			white-space:nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	</style>
 </head>
 <body>
 	<div class="container">
-		<h1>
-			Abcdefghijklmopqrstuvwxyz<br>
-			ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
-			abcdefghijklmopqrstuvwxyz
-		</h1>
-		<p>Abcdefghijklmopqrstuvwxyz</p>
-		<p>
-			Abcdefghijklmopqrstuvwxyz<br>
-			Abcdefghijklmopqrstuvwxyz<br>
-			Abcdefghijklmopqrstuvwxyz<br>
-			Abcdefghijklmopqrstuvwxyz
-		</p>
-		<h2>Abcdefghijklmopqrstuvwxyz</h2>
-		<h3>Abcdefghijklmopqrstuvwxyz</h3>
-		<h4>Abcdefghijklmopqrstuvwxyz</h4>
-		<h5>Abcdefghijklmopqrstuvwxyz</h5>
-		<h6>Abcdefghijklmopqrstuvwxyz</h6>
+		<div class="flex-row flex-fit">
+			<div class="col-6-3">
+				<h1 class="text-light">Elementary</h1>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo officiis nulla amet aspernatur itaque iusto repudiandae sapiente iure provident, numquam a impedit in? Porro, velit reprehenderit? Neque debitis sint possimus?</p>
+				<p class="h2">Lorem ipsum dolor sit amet consectetur</p>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo officiis nulla amet aspernatur itaque iusto repudiandae sapiente iure provident, numquam a impedit in? Porro, velit reprehenderit? Neque debitis sint possimus?</p>
+				<p class="h3">Nemo officiis nulla amet</p>
+				<p class="h4">Neque debitis sint possimus</p>
+				<p class="h5">Abcdefghijklmopqrstuvwxyz</p>
+				<p class="h6">Abcdefghijklmopqrstuvwxyz</p>
+			</div>
+			<div class="col-6-3">
+					<p class="h1">Iure provident numquam</p>
+					<p class="h2">Lorem ipsum dolor sit amet</p>
+					<p class="h3">Nemo officiis nulla amet</p>
+					<p class="h4">Neque debitis sint possimus</p>
+					<p class="h5">Sapiente iure provident</p>
+					<p class="h6">Aspernatur itaque iusto repudiandae</p>
+			</div>
+		</div>
 	</div>
+
+	<section id="colums-system-section" class="container">
+		<h2 class="h4 text-light">Columns System</h2>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo officiis nulla amet aspernatur itaque iusto repudiandae sapiente iure provident, numquam a impedit in? Porro, velit reprehenderit? Neque debitis sint possimus?</p>
+		<h3 class="h5 text-light">Abbreviated</h3>
+		<div class="flex-row">
+			<div class="col-6-6">
+				<p class="box mar-no">.col-6-6</p>
+			</div>
+		</div>
+		<div class="flex-row">
+			<div class="col-6-3">
+				<p class="box mar-no">.col-6-3</p>
+			</div>
+			<div class="col-6-3">
+				<p class="box mar-no">.col-6-3</p>
+			</div>
+		</div>
+		<div class="flex-row">
+			<div class="col-6-2">
+				<p class="box mar-no">.col-6-2</p>
+			</div>
+			<div class="col-6-2">
+				<p class="box mar-no">.col-6-2</p>
+			</div>
+			<div class="col-6-2">
+				<p class="box mar-no">.col-6-2</p>
+			</div>
+		</div>
+		<div class="flex-row">
+			<div class="col-6-1">
+				<p class="box mar-no">.col-6-1</p>
+			</div>
+			<div class="col-6-1">
+				<p class="box mar-no">.col-6-1</p>
+			</div>
+			<div class="col-6-1">
+				<p class="box mar-no">.col-6-1</p>
+			</div>
+			<div class="col-6-1">
+				<p class="box mar-no">.col-6-1</p>
+			</div>
+			<div class="col-6-1">
+				<p class="box mar-no">.col-6-1</p>
+			</div>
+			<div class="col-6-1">
+				<p class="box mar-no">.col-6-1</p>
+			</div>
+		</div>
+		<h3 class="h5 text-light">
+			<span>Full</span>
+			<small> - Small Gutter [ .gut-sm ]</small>
+		</h3>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-02">
+				<p class="box mar-no">.col-02</p>
+			</div>
+			<div class="col-58">
+				<p class="box mar-no">.col-58</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-05">
+				<p class="box mar-no">.col-05</p>
+			</div>
+			<div class="col-55">
+				<p class="box mar-no">.col-55</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-08">
+				<p class="box mar-no">.col-08</p>
+			</div>
+			<div class="col-52">
+				<p class="box mar-no">.col-52</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-10">
+				<p class="box mar-no">.col-10 | .col-1</p>
+			</div>
+			<div class="col-50">
+				<p class="box mar-no">.col-50 | .col-5</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-12">
+				<p class="box mar-no">.col-12</p>
+			</div>
+			<div class="col-48">
+				<p class="box mar-no">.col-48</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-15">
+				<p class="box mar-no">.col-15</p>
+			</div>
+			<div class="col-45">
+				<p class="box mar-no">.col-45</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-18">
+				<p class="box mar-no">.col-18</p>
+			</div>
+			<div class="col-42">
+				<p class="box mar-no">.col-42</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-20">
+				<p class="box mar-no">.col-20 | .col-2</p>
+			</div>
+			<div class="col-40">
+				<p class="box mar-no">.col-40 | .col-4</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-22">
+				<p class="box mar-no">.col-22</p>
+			</div>
+			<div class="col-38">
+				<p class="box mar-no">.col-48</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-25">
+				<p class="box mar-no">.col-25</p>
+			</div>
+			<div class="col-35">
+				<p class="box mar-no">.col-45</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-28">
+				<p class="box mar-no">.col-28</p>
+			</div>
+			<div class="col-32">
+				<p class="box mar-no">.col-42</p>
+			</div>
+		</div>
+		<div class="flex-row flex-fixed gut-sm">
+			<div class="col-30">
+				<p class="box mar-no">.col-30 | .col-3</p>
+			</div>
+			<div class="col-30">
+				<p class="box mar-no">.col-30 | .col-3</p>
+			</div>
+		</div>
+		
+	</section>
 </body>
 </html>
